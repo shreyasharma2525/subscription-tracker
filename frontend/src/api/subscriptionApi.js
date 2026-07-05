@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8002/api";
+
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8002/api",
+  baseURL: API_BASE_URL,
 });
 
 const publicRoutes = [
@@ -51,7 +54,7 @@ API.interceptors.response.use(
 
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8002/api/token/refresh/",
+          `${API_BASE_URL}/token/refresh/`,
           {
             refresh: refreshToken,
           }
@@ -64,7 +67,6 @@ API.interceptors.response.use(
         }
 
         originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
-
         return API(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem("accessToken");
